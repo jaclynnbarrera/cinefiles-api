@@ -20,6 +20,28 @@ app.post("/images", async (req, res) => {
   }
 });
 
+app.get("/images", async (req, res) => {
+  try {
+    const allImages = await pool.query("SELECT * FROM image ");
+    res.json(allImages.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.get("/images/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const image = await pool.query("SELECT * FROM image WHERE image_id = $1", [
+      id,
+    ]);
+
+    res.json(image.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 app.listen(5000, () => {
   console.log("server has started on port 5000");
 });
