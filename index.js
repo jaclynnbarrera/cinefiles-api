@@ -58,6 +58,17 @@ app.put("/images/:id", async (req, res) => {
   }
 });
 
+app.delete("/images/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteImage = await pool.query(
+      "DELETE FROM image WHERE image_id = $1",
+      [id]
+    );
+    req.json("Image was deleted!");
+  } catch (err) {}
+});
+
 app.listen(5000, () => {
   console.log("server has started on port 5000");
 });
