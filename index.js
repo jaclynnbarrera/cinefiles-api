@@ -42,6 +42,22 @@ app.get("/images/:id", async (req, res) => {
   }
 });
 
+app.put("/images/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { description } = req.body;
+    const updateImage = await pool.query(
+      "UPDATE image SET description = $1 WHERE image_id = $2",
+      [description, id]
+    );
+    if (res.statusCode === 200) {
+      res.json("Image was updated!");
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 app.listen(5000, () => {
   console.log("server has started on port 5000");
 });
