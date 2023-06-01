@@ -2,10 +2,20 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
+const uploadImage = require("./uploadImage");
 
 //middleware
 app.use(cors());
 app.use(express.json());
+
+app.post("/uploadImage", uploadImage.single("file"), async (req, res) => {
+  let data = {};
+  if (req.file) {
+    data.image = req.file.location;
+  }
+  console.log("in uplooad image API!!!!");
+  console.log(data.image);
+});
 
 app.post("/images", async (req, res) => {
   try {
