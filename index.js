@@ -9,12 +9,15 @@ app.use(cors());
 app.use(express.json());
 
 app.post("/uploadImage", uploadImage.single("file"), async (req, res) => {
-  let data = {};
-  if (req.file) {
-    data.image = req.file.location;
+  try {
+    let data = {};
+    if (req.file) {
+      data.image = req.file.location;
+    }
+    res.json(data);
+  } catch (err) {
+    console.error(err.message);
   }
-  console.log("in uplooad image API!!!!");
-  console.log(data.image);
 });
 
 app.post("/images", async (req, res) => {
