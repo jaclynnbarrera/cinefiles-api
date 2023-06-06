@@ -12,7 +12,7 @@ app.post("/uploadImage", uploadImage.single("file"), async (req, res) => {
   try {
     let data = {};
     if (req.file) {
-      data.image = req.file.location;
+      data.url = req.file.location;
     }
     res.json(data);
   } catch (err) {
@@ -21,11 +21,14 @@ app.post("/uploadImage", uploadImage.single("file"), async (req, res) => {
 });
 
 app.post("/images", async (req, res) => {
+  const actorsArray = req.body.actors.split(",").map((actor) => actor.trim());
+
   try {
-    const { description, color, frame, url } = req.body;
+    const { description, color, frame, url, title, director, dop, year } =
+      req.body;
     const newImage = await pool.query(
-      "INSERT INTO image (description, color, frame, url) VALUES ($1, $2, $3, $4) RETURNING *",
-      [description, color, frame, url]
+      "INSERT INTO image (description, color, frame, url, title, director, dop, actors, year) VALUES ($1, $2, $3, $4, $5, $6, $7,$8, $9) RETURNING *",
+      [description, color, frame, url, title, director, dop, actorsArray, year]
     );
     res.json(newImage.rows[0]);
   } catch (err) {
